@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Much Do You Earn</title>
+    <link rel="icon" type="image/x-icon" href="static/coin.ico">
+    <style>
+        body{
+            color: rgb(110, 133, 183);
+            background-color: rgb(248, 249, 215);
+            font-family: monospace;
+            font-size: 13px;
+        }
+
+        footer{
+            font-size: 8px;
+        }
+
+        #age, #fnlwgt, #capital-gain, #capital-loss, #hours-per-week {
+            color: rgb(138, 118, 148);
+        }
+        
+        select  {
+            padding : 8px;
+            font-size: 11px;
+        }
+
+        input {
+            padding : 8px;
+            font-size: 11px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Predict Your Income</h1>
+    <form action="{{ predict }} method="post>
+
+        <input type="text" name="age" placeholder="Age" required="required" />
+        
+        <br></br>
+
+        <input type="text" name="fnlwgt" placeholder="Final Weight" required="required" />
+        
+        <br></br>
+
+    
+
+        <label for="education-num">Education Num</label>
+        <select name="education-num" id="education-num" required="required">
+        </select>
+        
+        <br></br>
+
+        <input type="text" name="capital-gain" placeholder="Capital Gain" required="required" />
+        <input type="text" name="capital-loss" placeholder="Capital Loss" required="required" />
+
+        <br></br>
+   
+        <input type="text" name="hours-per-week" placeholder="Work Hours per Week" required="required" />
+
+        <br></br>
+
+        <label for="workclass">Work Class</label>
+        <select name="workclass" id="workclass" required="required">
+        </select>
+
+        <br></br>
+
+        <label for="education">Education</label>
+        <select name="education" id="education" required="required">
+        </select>
+
+        <br></br>
+
+        <label for="marital-status">Marital Status</label>
+        <select name="marital-status" id="marital-status" required="required">
+        </select>
+
+        <br></br>
+
+        <label for="occupation">Occupation</label>
+        <select name="occupation" id="occupation" required="required">
+        </select>
+        
+        <br></br>
+
+        <label for="relationship">Relationship</label>
+        <select name="relationship" id="relationship" required="required">
+        </select>
+        
+        <br></br>
+
+        <label for="race">race</label>
+        <select name="race" id="race" required="required">
+        </select>
+        
+        <br></br>
+
+        <label for="sex">Sex</label>
+        <select name="sex" id="sex" required="required">
+        </select>
+        
+        <br></br>
+
+        <label for="native-country">Native Country</label>
+        <select name="native-country" id="native-country" required="required">
+        </select>
+  
+        <br></br>
+        <button type="submit" class="btn btn-primary btn-block btn-large">Predict</button>
+        
+        
+    </form>
+
+    <div id="hasil">{{hasil}}</div>
+
+    <footer>
+        <p>Money icon from <a href="https://icon-icons.com/id/icon/dolar-koin-uang/56177">icon-icons.com</a></p>
+    </footer>
+    <script>
+        const workclasses = ['Federal-gov', 'Local-gov', 'Never-worked', 'Private',
+                                'Self-emp-inc', 'Self-emp-not-inc', 'State-gov', 'Without-pay',
+                                'other']
+        for (let i = 0; i < workclasses.length; i++){
+            const workclass = workclasses[i]
+            document.getElementById("workclass").innerHTML += `<option value ="${workclass}">${workclass}</option>`
+        }
+
+        const educations = ['10th', '11th', '12th', '1st-4th', '5th-6th', '7th-8th', '9th',
+                            'Assoc-acdm', 'Assoc-voc', 'Bachelors', 'Doctorate', 'HS-grad',
+                            'Masters', 'Preschool', 'Prof-school', 'Some-college']
+        for (let i = 0; i < educations.length; i++){
+            const education = educations[i]
+            document.getElementById("education").innerHTML += `<option value ="${education}">${education}</option>`
+        }
+
+        const status = ['Divorced', 'Married-AF-spouse', 'Married-civ-spouse',
+                            'Married-spouse-absent', 'Never-married', 'Separated', 'Widowed']
+        for (let i = 0; i < status.length; i++){
+            const marital_status = status[i]
+            document.getElementById("marital-status").innerHTML += `<option value ="${marital_status}">${marital_status}</option>`
+        }
+
+        const occupations = ['Adm-clerical', 'Armed-Forces', 'Craft-repair', 'Exec-managerial',
+                                'Farming-fishing', 'Handlers-cleaners', 'Machine-op-inspct',
+                                'Other-service', 'Priv-house-serv', 'Prof-specialty',
+                                'Protective-serv', 'Sales', 'Tech-support', 'Transport-moving',
+                                'other']
+        for (let i = 0; i < occupations.length; i++){
+            const occupation = occupations[i]
+            document.getElementById("occupation").innerHTML += `<option value ="${occupation}">${occupation}</option>`
+        }
+
+        const relationships = ['Husband', 'Not-in-family', 'Other-relative', 'Own-child',
+                                    'Unmarried', 'Wife']
+        for (let i = 0; i < relationships.length; i++){
+            const relationship = relationships[i]
+            document.getElementById("relationship").innerHTML += `<option value ="${relationship}">${relationship}</option>`
+        }
+
+        const races = ['Amer-Indian-Eskimo', 'Asian-Pac-Islander', 'Black', 'Other',
+                            'White']
+        for (let i = 0; i < races.length; i++){
+            const race = races[i]
+            document.getElementById("race").innerHTML += `<option value ="${race}">${race}</option>`
+        }
+
+        const sexes = ['Female', 'Male']
+        for (let i = 0; i < sexes.length; i++){
+            const sex = sexes[i]
+            document.getElementById("sex").innerHTML += `<option value ="${sex}">${sex}</option>`
+        }
+
+        const ncs = ['Cambodia', 'Canada', 'China', 'Columbia', 'Cuba',
+                        'Dominican-Republic', 'Ecuador', 'El-Salvador', 'England',
+                        'France', 'Germany', 'Greece', 'Guatemala', 'Haiti',
+                        'Holand-Netherlands', 'Honduras', 'Hong', 'Hungary', 'India',
+                        'Iran', 'Ireland', 'Italy', 'Jamaica', 'Japan', 'Laos', 'Mexico',
+                        'Nicaragua', 'Outlying-US(Guam-USVI-etc)', 'Peru', 'Philippines',
+                        'Poland', 'Portugal', 'Puerto-Rico', 'Scotland', 'South', 'Taiwan',
+                        'Thailand', 'Trinadad&Tobago', 'United-States', 'Vietnam',
+                        'Yugoslavia', 'other']
+        for (let i = 0; i < ncs.length; i++){
+            const native_country = ncs[i]
+            document.getElementById("native-country").innerHTML += `<option value ="${native_country}">${native_country}</option>`
+        }
+
+        const ednum = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+        for (let i = 0; i < ednum.length; i++){
+            const education_num = ednum[i]
+            document.getElementById("education-num").innerHTML += `<option value ="${education_num}">${education_num}</option>`
+        }
+    </script>
+</body>
+</html>
